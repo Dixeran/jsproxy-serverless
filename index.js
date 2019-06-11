@@ -1,6 +1,5 @@
 const Express = require("express");
 const request = require("request");
-const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 
 let app = Express();
@@ -70,6 +69,7 @@ app.use((req, res) => {
     followRedirect: false
   };
   console.log("\n#-----# Send request.");
+  console.log(req_obj);
 
   request(req_obj)
     .on("response", response => {
@@ -108,6 +108,11 @@ app.use((req, res) => {
       response.headers["--vary"] = vary;
       response.headers["--s"] = response.statusCode;
       delete response.headers["cache-control"]; // avoid being cached by cdn
+
+      // more set headers
+      response.headers["content-security-policy"] = "";
+      response.headers["content-security-policy-report-only"] = "";
+      response.headers["x-frame-options"] = "";
     })
     .on("error", e => {
       res.status(502).send(e.message);
