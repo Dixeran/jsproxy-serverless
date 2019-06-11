@@ -2,6 +2,10 @@ const Express = require("express");
 const request = require("request");
 const bodyParser = require("body-parser");
 
+if (process.env.TARGET === "production") {
+  console.log = function() {}; // omit console.log in production
+}
+
 let app = Express();
 // pre-flight request
 app.options("*", (req, res) => {
