@@ -38,9 +38,10 @@ app.use(
 // decode http request
 app.use((req, res, next) => {
   // construct proxy request
+  delete req.headers.host;
   res.locals.proxy_info = {
     method: req.method,
-    headers: {}
+    headers: req.headers
   };
   if (Buffer.isBuffer(req.body)) {
     res.locals.proxy_info.body = req.body;
@@ -119,6 +120,7 @@ app.use((req, res) => {
       response.headers["x-frame-options"] = "";
     })
     .on("error", e => {
+      console.log(e.message);
       res.status(502).send(e.message);
     })
     .pipe(res);
